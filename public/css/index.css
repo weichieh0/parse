@@ -1,0 +1,64 @@
+﻿body {
+    /*Font-family:Ms Gothic;*/
+}
+
+#main{
+      margin-top:16px;
+      margin-bottom:16px;
+      margin-left:16px;
+      margin-right:16px;
+}
+.Welcome font{
+  text-shadow:gray 4px 4px 7px;
+  /*Font-family:Ms Gothic*/
+}
+
+.input:focus {
+    outline: none !important;
+    border:1px solid red;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+#mapView{
+    margin-top:16px;
+}
+
+#googleMapInfoView{
+    margin-top:16px;
+}
+
+#mapControlView{
+    display: none;
+}
+
+#googleMap{
+}
+
+#dateCartTableView{
+      width: 532px;
+      display: none;
+}
+
+#orderInfo{
+      width: 532px;
+      display: none;
+}
+
+#orderTable{
+      width: 532px;
+}
+
+#loadingIcon{
+      width: 532px;
+      text-align :center;
+}
+
+.ui-dialog .ui-dialog-content.ui-dialog-spinner{
+    background: url("/images/ajax-loader.gif") no-repeat scroll 5px 15px transparent;
+    padding: 30px 0 0px 70px;
+    border: 2px solid #faa732;
+    font-weight: 900;
+    line-height: 1em;
+    font-size: 1.1em;
+    color: #faa732;
+}

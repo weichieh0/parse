@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+
+    <script src="scripts/parse-1.6.14.min.js"></script>
+    <script src="scripts/jquery-2.2.0.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/hbUtility.js"></script>
+    <script src="scripts/hbParseInit.js"></script>
+    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        //Parse.initialize("9O3uQHctMnz86F6m3lifIlwKrMGONwlUjO2OL4uf", "nbkR1HRcOkFEa4J73rPsWvaZsqa6O6BHI0GSGClz");
+    </script>
+
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/beeShippingFee.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <title>小蜜蜂小幫手</title>
+
+    <style>
+        .ui-widget-header, .ui-state-default, ui-button {
+            background: #faa732;
+            border: 1px solid #faa732;
+            color: #FFFFFF;
+            Font-family: Ms Gothic;
+            /*font-weight: bold;*/
+        }
+    </style>
+
+</head>
+<body id="main">
+    <div id="dialogView">
+        <div id="dialog-1"></div>
+    </div>
+    <ul class="nav nav-pills warning">
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                訂單查詢 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="index.html?mode=id" onclick="idMode()">訂單編號</a></li>
+                <li><a href="index.html?mode=date" onclick="dateMode()">訂單日期</a></li>
+            </ul>
+        </li>
+
+        <li role="presentation" class="dropdown active">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                帳單查詢 <span class="caret"></span>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="storeBill.html">店家帳單</a></li>
+                <li><a href="beeShippingFee.html">小蜜蜂帳單</a></li>
+            </ul>
+
+        </li>
+
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                銀行匯款 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="bankTransfer_store.html">店家匯款</a></li>
+                <li><a href="bankTransfer_bee.html">小蜜蜂匯款</a></li>
+            </ul>
+        </li>
+
+        <li role="presentation"><a href="storeManagement.html">店鋪管理</a></li>
+        <li role="presentation" class="dropdown"><a href="beeManagement.html">小蜜蜂管理</a></li>
+        <li role="presentation" class="dropdown"><a href="activeUserManagement.html">活動紀錄查詢</a></li>
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                其他 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="coupon.html" target=_blank>折價卷產生器</a></li>
+                <li><a href="holdOrderTool.html" target=_blank>卡單小幫手</a></li>
+                <li><a href="" onclick="parseLogOut()">登出</a></li>
+            </ul>
+        </li>
+    </ul>
+
+
+    <table>
+        <tr>
+            <td>
+                <input id="beePhone" type="text" class="form-control" placeholder="小蜜蜂電話" aria-describedby="basic-addon1">
+            </td>
+        <tr>
+            <td>
+                <input id="dateFrom" type="date" min="2015-01-02">
+            </td>
+            <td valign="middle">
+                <div> ~ </div>
+            </td>
+            <td>
+                <input id="dateTo" type="date" min="2015-01-02">
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <select class="form-control" id="sel1">
+                    <option value="all">所有</option>
+                    <option value="app">App</option>
+                    <option value="store">店家</option>
+                </select>
+            </td>
+
+            <td valign="top">
+                <button class="btn btn btn-warning" id="searchBtn">嗡嗡嗡...</button>
+            </td>
+        </tr>
+    </table>
+
+    <div id="loadingIcon">
+        <i class="fa fa-refresh fa-spin" style="font-size:36px; color:orange;"></i>
+    </div>
+
+    <div id="shippingFeeTableView" class="table-responsive">
+        <table class="table" id="shippingFeeTable">
+
+            <tr bgcolor="#FFDD55">
+                <th colspan="5" style="text-align:center">小蜜蜂資料</th>
+            </tr>
+
+            <tr>
+                <td colspan="1">姓名</td>
+                <td colspan="1" id="beeName"></td>
+                <td></td>
+                <td colspan="1">電話</td>
+                <td colspan="1" id="contactPhone"></td>
+            </tr>
+
+            <tr>
+                <td colspan="1">銀行代碼</td>
+                <td colspan="1" id="bankCode"></td>
+                <td></td>
+                <td colspan="1">帳戶號碼</td>
+                <td colspan="1" id="bankAccount"></td>
+            </tr>
+
+            <tr bgcolor="#dddddd">
+                <th colspan="5" style="text-align:center">運費資料<font id="dateFromTo" /></th>
+            </tr>
+
+            <tr>
+                <td colspan="3"></td>
+                <td colspan="1">總運費</td>
+                <td colspan="1" id="totalShippingFee"></td>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+                <td colspan="1">轉帳手續費</td>
+                <td colspan="1" id="transferFee"></td>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+                <td colspan="1">實際匯款</td>
+                <td colspan="1" id="currentShippingFee"></td>
+            </tr>
+
+            <tr bgcolor="#dddddd">
+                <th>#</th>
+                <th>日期</th>
+                <th>訂單編號</th>
+                <th>訂單屬性</th>
+                <th>運費</th>
+            </tr>
+            <tr>
+                <th colspan="3"></th>
+                <th>總運費</th>
+                <th id="totalFee"></th>
+            </tr>
+        </table>
+    </div>
+    <script>
+
+        $(function () {
+            $("#dialog-1").dialog({
+                autoOpen: false,
+                modal: true,
+                hide: { effect: "blind"},
+                height: 100,
+            });
+
+            $('#loadingIcon').hide();
+        });
+
+        var shippingFeeTable = document.getElementById("shippingFeeTable");
+        var orginalRowCount = shippingFeeTable.rows.length;
+        $('#searchBtn').on('click', function () {
+            $('#shippingFeeTableView').hide();
+            $('#loadingIcon').show();
+
+            for (var r = shippingFeeTable.rows.length - 1; r > orginalRowCount - 1; r--) {
+                shippingFeeTable.deleteRow(r - 1);
+            }
+
+            var dateFromText = $("#dateFrom").val();
+            var dateToText = $("#dateTo").val();
+
+            if (dateFromText == "" || dateToText == "") {
+                $("#dialog-1").dialog({ title: "注意" });
+                $("#dialog-1").html("請選擇查詢日期");
+                $("#dialog-1").dialog("open");
+
+                $('#loadingIcon').hide();
+                return;
+            }
+
+            $('#dateFromTo').html("(" + dateFromText + "~" + dateToText + ")");
+
+            var userName = "driver-" + $('#beePhone').val();
+
+            var query = new Parse.Query(Parse.User);
+            query.equalTo("username", userName);
+            query.equalTo("qualify", true);
+            query.find({
+                success: function (bees) {
+                    if (bees.length == 0) {
+
+                        $('#loadingIcon').hide();
+                        $("#dialog-1").dialog({ title: "收尋結果" });
+                        $("#dialog-1").html("找不到此小蜜蜂");
+                        $("#dialog-1").dialog("open");
+
+                        return;
+                    }
+                    var bee = bees[0];
+
+                    $('#beeName').html(bee.get('contact'));
+                    $('#contactPhone').html(bee.get('phone'));
+                    $('#bankCode').html(bee.get('bankCode'));
+                    $('#bankAccount').html(bee.get('bankAccount'));
+
+                    var dateFrom = new Date(dateFromText);
+                    var dateTo = new Date(dateToText);
+                    dateTo.setDate(dateTo.getDate() + 1);
+
+                    var HBShoppingCart = Parse.Object.extend("HBShoppingCart");
+                    var cartQuery = new Parse.Query(HBShoppingCart);
+                    cartQuery.equalTo("status", "complete");
+                    cartQuery.equalTo("bee", bee);
+                    cartQuery.greaterThan("submittedDate", dateFrom);
+                    cartQuery.lessThan("submittedDate", dateTo);
+                    cartQuery.descending("submittedDate");
+
+                    var selVal = $("#sel1").val();
+                    if (selVal === "store") {
+                        cartQuery.equalTo("paymentMethod", "cashForStore");
+                    } else if (selVal === "app") {
+                        cartQuery.notEqualTo("paymentMethod", "cashForStore");
+                    } 
+
+
+                    cartQuery.find({
+                        success: function (results) {
+
+                            var sum = 0;
+                            results.forEach(function (cart, index, array) {
+                                console.log("shippingFeeTable.rows.length: " + shippingFeeTable.rows.length);
+                                var row = shippingFeeTable.insertRow(shippingFeeTable.rows.length - 1)
+
+                                row.insertCell(0).innerHTML = index + 1;
+                                row.insertCell(1).innerHTML = format(cart.get("submittedDate"), 'yyyy-MM-dd');
+                                var cell = row.insertCell(2);
+                                cell.id = cart.id;
+                                cell.innerHTML = '<a href=orderInfo.html?objectId=' + cart.id + ' target=_blank>' + cart.id + '</a>';  //   "<a>" + cart.id + "</a>";
+                                var cartType = cart.get('paymentMethod') == null ? "" : cart.get('paymentMethod');
+                                if (cartType === "cashForStore") {
+                                    cartType = "店家"; 
+                                } else {
+                                    cartType = "App";
+                                }
+
+                                row.insertCell(3).innerHTML = cartType;
+                                var payToBee = cart.get('payToBee');
+                                row.insertCell(4).innerHTML = payToBee;
+                                sum += payToBee;
+                            });
+
+                            var totalFee = document.getElementById("totalFee");
+                            totalFee.innerHTML = sum;
+
+                            $('#totalShippingFee').html(sum);
+                            var currentFee = sum;
+
+                            //富邦 bankCode = 012;
+                            if (bee.get('bankCode') == "012") {
+                                $('#transferFee').html(0);
+
+                            } else {
+                               
+                                currentFee = currentFee - 15;
+                                if (currentFee >= 0) {
+                                    $('#transferFee').html(15);
+                                } else {
+                                    currentFee = 0;
+                                    $('#transferFee').html(0);
+                                }
+
+                            }
+
+                            $('#currentShippingFee').html(currentFee)
+                            $("#shippingFeeTableView").slideDown("slow");
+                            $('#loadingIcon').hide();
+                        },
+                        error: function (error) {
+                            alert("Error: " + error.code + " " + error.message);
+                            $('#loadingIcon').hide();
+                        }
+                    });
+
+                }, error: function (error) {
+                    alert("error : " + error);
+                    $('#loadingIcon').hide();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

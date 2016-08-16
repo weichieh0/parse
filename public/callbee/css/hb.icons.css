@@ -1,0 +1,41 @@
+#foodcourt-icon:after { 
+	background:  url("../hungrybee-icon/ic_food_3x.png") 50% 50% no-repeat; 
+	background-size: 25px 25px; 
+}
+
+#cart-icon:after { 
+	background:  url("../hungrybee-icon/ic_cart_3x.png") 50% 50%  no-repeat; 
+	background-size: 25px 25px; 
+}
+
+#history-icon:after { 
+	background:  url("../hungrybee-icon/ic_no_3x.png")   no-repeat; 
+	background-size: 25px 25px; 
+}
+
+#info-icon:after { 
+	background:  url("../hungrybee-icon/ic_information_3x.png")   no-repeat; 
+	background-size: 25px 25px; 
+}
+
+
+/*
+#email:after { background:  url("../_assets/img/glyphish-icons/18-envelope.png") 50% 50% no-repeat; background-size: 24px 16px;  }
+#login:after { background:  url("../_assets/img/glyphish-icons/30-key.png") 50% 50% no-repeat;  background-size: 12px 26px; }
+#beer:after { background:  url("../_assets/img/glyphish-icons/88-beermug.png") 50% 50% no-repeat;  background-size: 22px 27px; }
+
+
+<li><a href="#" id="foodcourt-icon" data-icon="custom">美食地圖</a></li>
+				<li><a href="#" id="cart-icon" data-icon="custom">購物籃</a></li>
+				<li><a href="#" id="history-icon" data-icon="custom">訂購紀錄</a></li>
+				<li><a href="#" id="info-icon" data-icon="custom">其它</a></li>
+ui-icon-foodstore:after {
+	background-image: url(../hungrybee-icon/ic_food.png);
+	background-color: transparent;
+}
+
+.ui-icon-cart:after {
+	background-image: url(../hungrybee-icon/ic_cart.png);
+	background-color: transparent;
+}
+*/

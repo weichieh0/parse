@@ -1,0 +1,332 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="scripts/parse-1.6.14.min.js"></script>
+    <script src="scripts/hbParseInit.js"></script>
+    <script src="scripts/hbUtility.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>-->
+
+    <!-- Latest compiled and minified CSS -->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">-->
+    <!-- Optional theme -->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">-->
+    <!-- Latest compiled and minified JavaScript -->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>-->
+
+    <script src="scripts/jquery-2.2.0.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+
+    <title>小蜜蜂小幫手</title>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5  toppad  pull-right col-md-offset-3 ">
+                <!--<A href="edit.html">Edit Profile</A>
+
+                <A href="edit.html">Logout</A>-->
+                <br>
+                <p class="text-info"></p>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad">
+
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" id="profileImg" class="img-circle img-responsive"> </div>
+
+                            <div class="col-md-9 col-lg-9">
+                                <table class="table table-user-information">
+                                    <tbody>
+                                        <tr>
+                                            <td>申請日期:</td>
+                                            <td id="registration-date"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>合格日期:</td>
+                                            <td id="qualified-date"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>申請狀態:</td>
+                                            <td id="qualify-status"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>駕照上傳</td>
+                                            <td id="driver-license-photo"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>車牌號碼</td>
+                                            <td id="license-plate-number"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>手機</td>
+                                            <td id="phone"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Email</td>
+                                            <td id="email"></td>
+                                        </tr>
+  
+                                        <tr>
+                                            <td>銀行帳號</td>
+                                            <td id="bank-account"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>運送次數</td>
+                                            <td id="deliver-count"></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>運送狀態</td>
+                                            <td id="deliver-status"></td>
+                                        </tr>
+                                        
+
+                                        <tr>
+                                            <td>裝置</td>
+                                            <td id="device-type"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>版本</td>
+                                            <td id="version"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>備註</td>
+                                            <td id="remark"></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                                <!--<a href="#" class="btn btn-primary">My Sales Performance</a>-->
+                                <!--<a href="#" class="btn btn-primary">Team Sales Performance</a>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <a data-original-title="Broadcast Message" data-toggle="tooltip" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
+                        <span class="pull-right">
+                            <a id="editBeeBtn" href="editBeeInfo.html" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                            <!--<a data-original-title="Remove this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>-->
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var panels = $('.user-infos');
+            var panelsButton = $('.dropdown-user');
+            panels.hide();
+
+            //Click dropdown
+            panelsButton.click(function () {
+                //get data-for attribute
+                var dataFor = $(this).attr('data-for');
+                var idFor = $(dataFor);
+
+                //current button
+                var currentButton = $(this);
+                idFor.slideToggle(400, function () {
+                    //Completed slidetoggle
+                    if (idFor.is(':visible')) {
+                        currentButton.html('<i class="glyphicon glyphicon-chevron-up text-muted"></i>');
+                    }
+                    else {
+                        currentButton.html('<i class="glyphicon glyphicon-chevron-down text-muted"></i>');
+                    }
+                });
+            });
+
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $('button').click(function (e) {
+                e.preventDefault();
+                alert("This is a demo.\n :-)");
+            });
+        });
+    </script>
+
+    <!--<img id="profileImg" style="width:304px;height:228px;" />-->
+
+    <script>
+        $(function () {
+
+
+            var getBeeStatus = function (bee) {
+                var beeStatus = "待審核";
+
+                if (bee.get('applyBee') === "applying") {
+
+                    beeStatus = "未完成申請";
+
+                } else if (bee.get('applyBee') === "applied") {
+                    if (!bee.get('qualify')) {
+
+                        var beeStatus = "待審核";
+
+                        //var userPhone = bee.get('phone');
+
+                        //for (var i = 0; i < phones.length; i++) {
+                        //    if (phones[i] == userPhone) {
+                        //        beeStatus = "已收到回傳表單";
+                        //        break;
+                        //    }
+                        //}
+
+                    } else {
+
+                        beeStatus = "合格";
+                    }
+
+                } else if (bee.get('applyBee') === "cancel") {
+                    beeStatus = "取消";
+                }
+
+                return beeStatus;
+
+            };
+
+            $('.text-info').html(format(new Date(), 'yyyy/MM/dd hh:mm'));
+
+            var objectId = getUrlParameter('objectId');
+            $('#editBeeBtn').attr("href", "editBeeInfo.html?objectId=" + objectId);
+            var query = new Parse.Query(Parse.User);
+            query.get(objectId, {
+                success: function (bee) {
+
+                    var params = {
+                        userId:bee.id
+                    };
+
+                    Parse.Cloud.run("getUserInstallation", params, {
+                        success: function (installation) {
+
+                            var version = installation.get('appCurrentVersion');
+                            version = (version == null) ? installation.get('appVersion') : version;
+
+                            $('#device-type').html(installation.get('deviceType'));
+                            $('#version').html(version);
+
+                        }, error: function (error) {
+                            console.log(error);
+                            alert(error);
+                        }
+                    });
+
+
+                    $('.panel-title').html(bee.get('contact'));
+                    var qualifyAt = bee.get('qualifyAt');
+
+                    if (qualifyAt != null) {
+                        $('#qualified-date').html(format(qualifyAt, 'yyyy/MM/dd hh:mm'));
+                    }
+                    
+                    var beeStatus = getBeeStatus(bee);
+
+                    $('#qualify-status').html(beeStatus);
+                    $('#registration-date').html(format(bee.get('createdAt'), 'yyyy/MM/dd hh:mm'));
+                    $('#email').html("<a>" + bee.get('email') + "</a>");
+                    $('#phone').html(bee.get('phone'));
+                    var bankAccount;
+                    if (!bee.get('bankCode')) {
+                        bankAccount = "none";
+                    } else {
+                        bankAccount = bee.get('bankCode') + "-" + bee.get('bankAccount');
+                    }
+
+                    $('#bank-account').html(bankAccount);
+                    $('#license-plate-number').html(bee.get('licenseNo'));
+                    $('#remark').html(bee.get('beeRemark'));
+                    $('#deliver-status').html(bee.get('delivering')?"運送中":"無");
+                    
+                    //$('#deliver-count').html(bee.get('licenseNo'));
+
+                    var HBLob = Parse.Object.extend("HBLob");
+                    var lobQuery = new Parse.Query(HBLob);
+                    lobQuery.equalTo("owner", bee);
+                    lobQuery.equalTo("category", "person");
+                    lobQuery.descending("createdAt");
+                    lobQuery.first({
+                        success: function (lob) {
+                            if (lob != null) {
+                                var photo = lob.get("data");
+                                $("#profileImg")[0].src = photo.url();
+                            }
+                        }, error: function (e) {
+                        }
+                    });
+                    var HBShoppingCart = Parse.Object.extend("HBShoppingCart");
+                    var cartQuery = new Parse.Query(HBShoppingCart);
+                    cartQuery.equalTo("bee", bee);
+                    cartQuery.equalTo("status", "complete");
+                    cartQuery.limit(1000);
+                    cartQuery.count({
+                        success: function (number) {
+                            // There are number instances of MyClass.
+                            $('#deliver-count').html(number);
+                        },
+                        error: function (error) {
+
+                            // error is an instance of Parse.Error.
+                        }
+                    });
+
+                    var lobQuery_license = new Parse.Query(HBLob);
+                    lobQuery_license.equalTo("owner", bee);
+                    lobQuery_license.equalTo("category", "drive_license");
+                    lobQuery_license.descending("createdAt");
+                    lobQuery_license.first({
+                        success: function (lob) {
+                            if (lob != null) {
+                                var fotmat = $('<a href=photoView.html?objectId=' + lob.id + ' target=_blank>').html("有");
+                                $('#driver-license-photo').html(fotmat);
+                                //var photo = lob.get("data");
+                                //$("#profileImg")[0].src = photo.url();
+                            } else {
+                                $('#driver-license-photo').html("無");
+                            }
+                        }, error: function (e) {
+
+                        }
+
+                    });
+                    
+                },
+                error: function (object, error) {
+                    console.log(error);
+                    // The object was not retrieved successfully.
+                    // error is a Parse.Error with an error code and message.
+                }
+
+            });
+
+        });
+    </script>
+
+
+</body>
+</html>

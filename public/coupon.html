@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="scripts/parse-1.6.14.min.js"></script>
+    <script src="scripts/hbParseInit.js"></script>
+    <script src="scripts/hbUtility.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <script src="scripts/jquery-2.2.0.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <title>小蜜蜂小幫手</title>
+
+</head>
+<body>
+
+    <br>
+    <div class="col-xl-12 col-xs-12 col-sm-12 col-md-6 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-2 toppad">
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">折價卷產生器</h3>
+            </div>
+            <div class="panel-body" style='margin-left:20px;margin-right:20px;' id="inputView" >
+                <div class="row">
+
+                    <span class="label label-success">1</span><br />
+                    <label for="sel1">金額:</label>
+
+                    <input type="text" class="form-control" placeholder="請輸入折價卷金額(元)" id="couponAmountInput">
+
+                    <!--<select class="form-control" id="mealItemSelect"></select>-->
+                    <!--<span class="label label-primary">3</span><br />
+                        <label>單價:</label>
+                        <input type="text" class="form-control" placeholder="元" id="mealUnitPriceInput">-->
+
+                    <br>
+                    <span class="label label-success">2</span><br />
+                    <label>數量:</label>
+                    <input type="text" class="form-control" placeholder="請輸入折價卷數量" id="couponCountInput">
+
+                    <br>
+                    <span class="label label-success">3</span><br />
+                    <label for="sel1">指定使用者:<font color="orange" id="userName"></font></label>
+                    <p>* 若不指定使用者，不用輸入電話"。</p>
+
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="請輸入使用者電話" id="ownerPhoneInput">
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" type="button"  id="checkOwnerExistBtn">檢查</button>
+                        </span>
+                    </div>
+
+                    <!--<input type="text" class="form-control" placeholder="請輸入使用者電話" id="ownerPhoneInput">
+                    <br>
+                    <button type="submit" class="btn btn-success" id="checkOwnerExistBtn">檢查</button><br><br>-->
+                   
+
+                    <br>
+                    <span class="label label-success">4</span><br />
+                    <label for="sel1">備註:</label>
+                 
+                    <input type="text" class="form-control" placeholder="備註" id="remarkInput">
+
+                    <br>
+                    <span class="label label-success">5</span><br />
+                    <label for="sel1">產生折價卷:</label>
+                    <br>
+                    <button type="submit" class="btn btn-success" id="makeCouponBtn">產生</button><br><br>
+
+
+                    <!--<table class="table table-bordered">
+
+                        <thead>
+                            <tr>
+                                <td colspan="1" id="">#</td>
+                                <td colspan="1" id="">折價卷碼</td>
+                                <td colspan="1">金額</td>
+                                <td colspan="1" id="">使用者</td>
+                            </tr>
+                        </thead>
+                        <tbody id="resultCouponRow">
+
+                        </tbody>
+                    </table>-->
+
+                </div>
+            </div>
+
+            <div class="panel-body" id="resultView" >
+                <!--<a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
+                <span class="pull-right">
+                    <a id="editBeeBtn" href="editBeeInfo.html" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                </span>-->
+                <label>結果:</label>
+                <table class="table table-bordered">
+
+                    <thead>
+                        <tr>
+                            <td colspan="1" id="">#</td>
+                            <td colspan="1" id="">折價卷碼</td>
+                            <td colspan="1">金額</td>
+                            <td colspan="1" id="">使用者</td>
+                            <td colspan="1" id="">備註</td>
+                        </tr>
+                    </thead>
+                    <tbody id="resultCouponRow">
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('#resultView').hide();
+
+
+            var ownerId;
+            var ownerName;
+
+            $('#checkOwnerExistBtn').click(function (e) {
+
+                ownerId = null;
+                ownerName = null;
+
+                var ownerPhoneInput = $("#ownerPhoneInput").val();
+                var query = new Parse.Query(Parse.User);
+                query.equalTo("username", ownerPhoneInput);
+                query.first({
+                    success: function (user) {
+                        if (user != null) {
+
+                            ownerId = user.id;
+                            ownerName = user.get("contact");
+
+                            $('#userName').text(ownerName);
+                            alert(ownerName);
+
+                            console.log(ownerName);
+                        } else {
+                            alert("查無此人");
+                            console.log("查無此人");
+                        }
+                    }, error: function (e) {
+                        console.log(e);
+                    }
+                });
+            });
+            
+
+            $('#makeCouponBtn').click(function (e) {
+                
+                if (ownerId == null && $("#ownerPhoneInput").val() != null && $("#ownerPhoneInput").val() != "") {
+                    alert("請先點選檢查鈕，確認此電話是否存在!");
+                    return ;
+                }
+                
+                var couponAmountInput = parseInt($("#couponAmountInput").val());
+                var couponCountInput = parseInt($("#couponCountInput").val());
+                var ownerPhoneInput = $("#ownerPhoneInput").val();
+                var remarkInput = $("#remarkInput").val();
+                
+                console.log("couponAmountInput = " + couponAmountInput);
+                console.log("couponCountInput = " + couponCountInput);
+                console.log("ownerPhoneInput = " + ownerPhoneInput);
+                console.log("remarkInput = " + remarkInput);
+                console.log("userId = " + ownerId);
+
+                if (isNaN(couponCountInput) || isNaN(couponAmountInput)) {
+                    alert("金額和數量輸入必須為數字");
+                    return;
+                }
+
+                var couponArray = new Array();
+                for (var i = 0; i < couponCountInput; i++) {
+                    var HBCoupon = Parse.Object.extend("HBCoupon");
+                    var newCoupon = new HBCoupon();
+                    newCoupon.set("discount", 0 - couponAmountInput);
+                    newCoupon.set("remark", remarkInput);
+                    if (ownerId != null) {
+                        newCoupon.set("owner", Parse.Object.extend(Parse.User).createWithoutData(ownerId));
+                    }
+
+                    couponArray.push(newCoupon);
+                }
+
+                Parse.Object.saveAll(couponArray, {
+                    success: function (list) {
+                        $('#inputView').hide();
+                        $('#resultView').show();
+
+                        list.forEach(function (coupon, index, array) {
+
+                            $("#resultCouponRow").append(
+                                $('<tr>').append(
+                                    $('<td>').html(index + 1),
+                                    $('<td>').html(coupon.id),
+                                    $('<td>').html(0-coupon.get("discount")),
+                                    $('<td>').html(ownerName != null ? ownerName : ""),
+                                    $('<td>').html(coupon.get("remark"))));
+
+                        });
+
+                        // All the objects were saved.
+                    },
+                    error: function (error) {
+                        alert("產生折價卷時發生錯誤，請聯絡偉大工程師處理!");
+                        // An error occurred while saving one of the objects.
+                    },
+                });
+
+          
+
+            });
+
+        });
+    </script>
+
+
+
+
+
+</body>
+</html>

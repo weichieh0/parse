@@ -1,0 +1,91 @@
+.app-btn {	
+	background: #F25B20 !important;
+	border: none !important; 
+	color: #fff !important;
+	text-shadow:none !important;
+}
+
+hb-nav .ui-btn { 
+	padding-top: 40px !important; 
+}
+
+.pinto.header-image {
+	margin-bottom:0px;
+	overflow:hidden;
+}
+
+.ui-input-listview {
+  margin-top: -0.8em !important;
+  margin-bottom: -1em !important;
+  margin-left: -0.5em !important; /* If you want to fix left as well */
+  margin-right: -0.5em !important; /* If you want to fix right as well */
+}
+
+.one-em {
+	font-size: 1em !important;	
+}
+.one-three-em {
+	font-size: 1.3em !important;	
+}
+
+.font10 {
+	font-size: 9pt;
+}
+
+.font12 {
+	font-size: 12pt;
+}
+
+.font14 {
+	font-size: 14pt;
+}
+
+.font12.a-color {
+	color: #FF6F0D;
+}
+
+.a-color {
+	color: #FF6F0D !important;
+}
+
+.b-color {
+	border-color: #FFB00D !important;
+	background:#FFB00D !important;
+   color: #FFF !important;
+   -webkit-box-shadow:none !important;
+   box-shadow:none !important;
+   text-shadow:none !important;
+}
+
+.ui-input-text{ 
+		  border: none !important;
+		  box-shadow: none !important;
+		  background-color : transparent;
+		}
+
+.nav-header {
+	background-color : #FFDF00 !important;
+	color: white !important;
+	text-shadow: none !important;
+}
+
+/*
+.ui-btn:after { 
+	width: 25px!important; 
+	height: 25px!important;
+	margin-left: -15px !important; 
+	box-shadow: none!important; 
+	-moz-box-shadow:none!important; 
+	-webkit-box-shadow: none!important;
+	-webkit-border-radius: 0 !important; 
+	border-radius: 0 !important; 
+}
+
+
+
+
+#mybody.ui-mobile-viewport.ui-overlay-a {
+	background-image : url(../images/bg.png) ;
+	}
+*/	
+	

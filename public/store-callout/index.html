@@ -1,0 +1,594 @@
+﻿<!DOCTYPE html>
+<!--
+	店家叫外送，客服後台畫面
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+        
+        <!------------------------------ css --------------------------------->
+        <!-- jquery mobile -->
+    	<link rel="stylesheet" href="external/jquery-mobile/jquery.mobile-1.4.5.css" />
+    	
+    	
+    	<!--app customiz -->
+    	<link rel="stylesheet" href="css/hb.app.css" />
+    	
+    	
+    	
+    	<!---------------------------- javascript lib ------------------------>
+    	<!-- jquery & jquery mobile-->
+    	<script src="external/jquery/jquery-1.12.2.min.js"></script>
+    	<script src="external/jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
+    	
+    	
+    	<!-- parse lib -->
+    	<script src="external/parse-1.6.14.js"></script>
+    	
+    	<!-- handlebar -->
+    	<script src="external/handlebars-v4.0.5.js"></script>
+    	
+    	
+    	<!--app util -->
+    	<script src="js/hb.parse-conn.js"></script>
+    	<script src="js/hb.app.js"></script>
+    	<script src="js/hb.home.js"></script>
+    	
+    	
+        <script>
+        	
+        	$(document).ready(function() {
+        		verifyUserLogined();	
+        	});
+        	
+        </script>
+        
+        <style>
+        	
+			.bee-bg {
+			    background-image : url(./images/bg.png) !important;
+			    background-repeat: repeat !important;
+			}
+			
+			input[type=text] {
+				background-color: rgba(128, 128, 128, 0.11);
+			}
+			
+			.seperator {
+				background-color: rgba(128, 128, 128, 0.11) !important;
+			}
+			
+			/*** popup width ***/
+			#loginError200-popup {width: 90%;}
+			#transactionResultPopup-popup {width: 90%;}
+        </style>
+        
+        
+	
+        <title>店家叫外送，客服後台</title>
+    </head>
+    
+<body>
+	
+	<!------------------------------------------------------------------------
+    	home page 
+    	首頁
+    ------------------------------------------------------------------------>
+    <div data-role="page" id="home" class="bee-bg">
+    	<div data-role="content">
+    		<div class="ui-grid-solo" style="text-align:center">
+				<img src="images/img_logo3x.png" width="80%">
+			</div>
+    		<div class="ui-block-solo" style="text-align:center">
+				<span><h2>歡迎登入 [店家叫外送] 客服後台</h2></span>
+			</div>
+			<div class="ui-grid-a">
+				<div class="ui-block-a" style="width:15%">
+					<img src="images/ic_phone.png" width="50%"  style="margin-top: 10px;">
+				</div>
+				
+				<div class="ui-block-b" style="width:85%">
+					<input type="text" id="phoneNo" maxlength="10" class="font12" name="phoneNo" placeholder="請輸入手機號碼" value="036230127">
+				</div>
+			</div>
+			
+			<div class="ui-grid-solo">
+				<hr style="background-color:black; border-top:none" />
+			</div>
+			
+			<div class="ui-grid-solo">
+				<a href="#" data-role="button" id="authCodeBtn"  class="app-btn">取得認證碼</a>
+			</div>		
+					
+			<!-- error popup -->
+			<div data-role="popup" id="getAuthCodeError" data-overlay-theme="b" >
+	      		<div data-role="header">
+	        		<h1>無法再取得認證碼</h1>
+	      		</div>
+	
+	      		<div data-role="main" class="ui-content">
+	        		<h3>已取過三次認證碼但都未登入成功。可聯絡 info@hungrybee.net 協助完成登入</h3>
+	        		<div data-role="navbar">
+		      			<ul>
+		        			<li><a href="#" data-rel="back" class="app-btn">確定</a></li>
+		      			</ul>
+		    		</div>
+	     		</div>
+	     	</div> 
+		</div>
+    </div>
+    	
+    <!------------------------------------------------------------------------
+    	enterAuthCode page 
+    	輸入認證碼頁面	
+    ------------------------------------------------------------------------>	
+	<div data-role="page" id="enterAuthCode" class="bee-bg">
+		<div data-role="content">
+			<div class="ui-grid-solo" style="text-align:center">
+				<img src="images/img_logo3x.png" width="80%">
+			</div>
+			
+			<div class="ui-grid-solo" style="text-align:center">
+					<label>您將在2分鐘內收到簡訊認證碼</label>
+    		</div>
+    		
+    		<div class="ui-grid-a">
+				<div class="ui-block-a" style="width:25%;margin-top: 10px;">
+					<font class="font12">手機號碼</font>
+				</div>
+				<div class="ui-block-b" style="width:75%">
+					<input type="text" id="phoneNoDisplay" name="phoneNoDisplay" readonly class="font12">
+				</div>
+			</div>
+			<div class="ui-grid-a">
+				<div class="ui-block-a" style="width:25%;margin-top: 10px;">
+                    <font class="font12">認證碼</font>
+				</div>
+				<div class="ui-block-b" style="width:75%">
+					<input type="text" id="authCode" maxlength="6" name="authCode" placeholder="請在此輸入6碼認證碼" class="font12" value="">
+				</div>
+			</div>
+				
+			<div class="ui-grid-solo">			
+				<a href="#" data-role="button" id="loginBtn"  class="app-btn">確認</a>
+	    	</div>
+	    	
+	    	<div class="ui-grid-solo" style="text-align:center">	
+	    		<P>&nbsp;</p>
+	    	</div>
+	    	
+	    	<!-- error popup -->
+			<div data-role="popup" id="loginError200" data-overlay-theme="b" >
+	      		<div data-role="header">
+	        		<h1>登入失敗</h1>
+	      		</div>
+	
+	      		<div data-role="main" class="ui-content">
+	        		<h3>認證碼輸入有誤</h3>
+	        		<div data-role="navbar">
+		      			<ul>
+		        			<li><a href="#" data-rel="back" class="app-btn">確定</a></li>
+		      			</ul>
+		    		</div>
+	     		</div>
+	     	</div>
+		</div>
+	</div> <!--end page-->
+    	
+    	
+    <!------------------------------------------------------------------------
+    	main page 
+    	顯示主頁	
+    ------------------------------------------------------------------------>
+    <div data-role="page" id="mainPage">
+    	
+    	<script id="store-list-template" type="text/x-handlebars-template">
+			<option value="---"> --- 請選擇 ---</option>
+			{{#each store}}
+				<option value="{{objectId}}" since-midnight="{{mealId}}">{{timeSlot.interval}}</option>
+			{{/each}}
+		</script>
+		<script id="etd-list-template" type="text/x-handlebars-template">
+			<option value="---"> --- 請選擇 ---</option>
+			{{#each this}}
+				<option value="{{dateString}}">{{dateString}}</option>
+			{{/each}}
+		</script>
+    	
+    	<div data-role="header" data-position="fixed" class="nav-header">
+			<!-- sticky header -->
+			<h1>[店家叫外送] 客服後台</h1>
+			<a href="#" data-icon="plus" data-theme="b" class="ui-btn-right" id="createNew">新增外送單</a>
+		</div>
+		
+		<div data-role="content">
+				<ul data-role="listview" data-inset="true" style="display:none" id="mainForm">
+					<li>
+				    	<div class="ui-grid-solo">
+				    		<div class="ui-block-a font14" >
+				    			訂單編號:<span id="orderNo"></span>
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			叫外送店家
+				    			<input type="hidden" id="storeId" name="storeId">
+				    			<input type="hidden" id="mealId" name="mealId">
+				    			<input type="hidden" id="ownerId" name="ownerId">
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<!-- 店家id-餐點id-UserId -->
+				    			
+				    			<!-- 測試區
+				    			<select name="selectStore" id="selectStore">
+				    				<option value="---"> --- 請選擇 ---</option>
+				    				<option value="aw5RxUAgDJ" storeId="aw5RxUAgDJ" mealId="fIjkuuI9Bh" ownerId="medzSlRpSQ">陳記大腸蚵仔麵線</option>
+				    				<option value="LcombjJHd0-eyOe5fID3W">風城披薩</option>
+								</select>	
+								-->
+								<!-- 正式區 --> 
+								<select name="selectStore" id="selectStore">
+				    				<option value="---"> --- 請選擇 ---</option>
+				    				<option value="LZgMm65jct" storeId="LZgMm65jct" mealId="AARuIyGbwC" ownerId="qoaOFK7qz0">麵朝(建新店)</option>
+				    				<option value="InUxP5ItHU" storeId="InUxP5ItHU" mealId="G2lpq9lnJW" ownerId="1UxWTaL8Zz">麵朝(食品店)</option>
+				    				<option value="4W260dmK5A" storeId="4W260dmK5A" mealId="TpTBry4LxK" ownerId="cW5iaOvHkJ">烤茶圓</option>
+				    				<option value="ISn69iUT4P" storeId="ISn69iUT4P" mealId="WDxqF9upOV" ownerId="DaxiiX7Wld">胖老爹美式炸雞</option>
+				    				<option value="PtyGeUnVHs" storeId="PtyGeUnVHs" mealId="HvQWrdzMCm" ownerId="tLKwaB8dJv">喫茶享樂</option>
+				    				<option value="SPRUXHi7uA" storeId="SPRUXHi7uA" mealId="5O01KctDNg" ownerId="xwZDPNWkxY">風城披薩</option>
+				    				<option value="2OddifDQXC" storeId="2OddifDQXC" mealId="qcCmEJ8oFD" ownerId="nTZdEIUcLt">酷比食堂</option>
+				    				<option value="zCLyrqktYB" storeId="zCLyrqktYB" mealId="dMWiuDunbA" ownerId="nTZdEIUcLt">中大水餃鍋貼館</option>
+				    				<option value="wsEzFd3QxR" storeId="wsEzFd3QxR" mealId="ygHcNRGIuy" ownerId="nTZdEIUcLt">丸作食茶</option>
+				    				<option value="06U0sXL0cP" storeId="06U0sXL0cP" mealId="TueVEeGfql" ownerId="nTZdEIUcLt">大爺鹽酥雞</option>
+				    				<option value="6LB8pItbBb" storeId="6LB8pItbBb" mealId="ihBd7X8xoH" ownerId="nTZdEIUcLt">輕便當</option>
+								</select>
+								
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10px 0px 0px 0px">
+				    			餐費總金額
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<input type="text" name="totalPrice" id="totalPrice" value="0">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10px 0px 0px 0px">
+				    			付給小蜜蜂運費
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<input type="text" name="payToBee" id="payToBee" placeholder="輸入正確金額">
+						    </div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10px 0px 0px 0px">
+				    			要指定小蜜蜂
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<input type="radio" name="reserved" id="reservedRadioNo" value="No" checked="checked">
+						        <label for="reservedRadioNo">否</label>
+						        <input type="radio" name="reserved" id="reservedRadioYes" value="Yes">
+						        <label for="reservedRadioYes">是</label>
+						        <div style="display:block">
+						        	<div class="ui-grid-b">
+						        		<div class="ui-block-a">
+						        			<input type="text" name="phoneOfBee" id="phoneOfBee" placeholder="若選是，請輸入小蜜蜂手機">
+						        		</div>
+						        		<div class="ui-block-b">
+						        			<input type="button" name="lookingForBee" id="lookingForBee" value="檢查手機號碼是否有效">
+						        		</div>
+						        		<div class="ui-block-c">
+						        			<input type="hidden" name="beeId" id="beeId">
+						        		</div>
+						        	</div>
+						        </div>
+						        <div>
+						        	<span id="findBeeOK" style="display:none"><img src="images/positive.png" width="50" height="50"><span id="beeContact"></span></span>
+						        	<span id="findBeeFailed" style="display:none"><img src="images/nagitive.jpeg" width="50" height="50">查無小蜜蜂</span>
+						        </div>
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			取餐時間
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<div class="ui-grid-a">
+				    				<div class="ui-block-a font14">
+						    			<select name="etdDateString" id="etdDateString">
+				    					</select>
+						    		</div>
+						    		<div class="ui-block-b">
+						    			<input type="text" name="etdTimeString" id="etdTimeString" placeholder="12:30">
+						    		</div>
+				    			</div>
+				    			
+				    		</div>
+				    	</div>
+				    </li>
+				     <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10px 0px 0px 0px">
+				    			送達時間
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<div class="ui-grid-a">
+				    				<div class="ui-block-a font14">
+						    			<select name="etaDateString" id="etaDateString">
+				    					</select>
+						    		</div>
+						    		<div class="ui-block-b">
+						    			<input type="text" name="etaTimeString" id="etaTimeString" placeholder="12:50">
+						    		</div>
+				    			</div>
+				    			
+				    		</div>
+				    	</div>
+				    </li>
+				    
+				    <li class="seperator">
+				    	<div class="ui-grid-a">
+				    		<span>第一個送達地址</span>
+				    	</div>
+				    </li> 
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10px 0px 0px 0px">
+				    			送餐完整地址
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<!--input type="text" name="address1" id="address1" placeholder="記得填" value="新竹市東區展業一路9號"-->
+				    			<input type="text" name="address1" id="address1" placeholder="記得填">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10px 0px 0px 0px">
+				    			聯絡備註
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<!--input type="text" name="addressNote1" id="addressNote1" placeholder="若有則填" value="應美盛"-->
+				    			<input type="text" name="addressNote1" id="addressNote1" placeholder="若有則填">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			聯絡人
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<input type="text" name="contact1" id="contact1" placeholder="若有則填" >
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			聯絡電話
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<!--input type="text" name="contactPhone1" id="contactPhone1" placeholder="記得填" value="0978798842"-->
+				    			<input type="text" name="contactPhone1" id="contactPhone1" placeholder="記得填">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10px 0px 0px 0px">
+				    			收取現金
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<input type="text" name="cash1" id="cash1" placeholder="ex:500">
+				    		</div>
+				    	</div>
+				    </li>
+				     <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:50%;padding:10px 0px 0px 0px">
+				    			<input type="hidden" name="addressId-1" id="addressId-1">
+				    			<input type="hidden" name="lat-1" id="lat-1" >
+				    			<input type="hidden" name="lng-1" id="lng-1" >
+				    			
+				    			<span id="findAddr1-OK" style="display:none"><img src="images/positive.png" width="50" height="50"></span>
+						        <span id="findAddr1-Failed" style="display:none"><img src="images/nagitive.jpeg" width="50" height="50"></span>
+				    		</div>
+				    		<div class="ui-block-b" style="width:50%">
+				    			<input type="button" name="createAddress1" id="createAddress1" value="檢查地址是否有效">
+				    		</div>
+				    	</div>
+				    </li>
+				    
+				    <li class="seperator">
+				    	<div class="ui-grid-a">
+				    		<span>第二個送達地址(如果有的話)</span>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			送餐完整地址
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<!--input type="text" name="address2" id="address2" placeholder="記得填" value="新竹市東區園區二路58號"-->
+				    			<input type="text" name="address2" id="address2" placeholder="記得填">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			聯絡備註
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<!--input type="text" name="addressNote2" id="addressNote2" placeholder="若有則填" value="環波"-->
+				    			<input type="text" name="addressNote2" id="addressNote2" placeholder="若有則填">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			聯絡人
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<input type="text" name="contact2" id="contact2" placeholder="若有則填">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			聯絡電話
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<!--input type="text" name="contactPhone2" id="contactPhone2" placeholder="記得填" value="5783002#640"-->
+				    			<input type="text" name="contactPhone2" id="contactPhone2" placeholder="記得填">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			收取現金
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<input type="text" name="cash2" id="cash2" placeholder="ex:500">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:50%;padding:10 0 0 0">
+				    			<input type="hidden" name="addressId-2" id="addressId-2">
+				    			<input type="hidden" name="lat-2" id="lat-2" >
+				    			<input type="hidden" name="lng-2" id="lng-2" >
+				    			
+				    			<span id="findAddr2-OK" style="display:none"><img src="images/positive.png" width="50" height="50"></span>
+						        <span id="findAddr2-Failed" style="display:none"><img src="images/nagitive.jpeg" width="50" height="50"></span>
+				    		</div>
+				    		<div class="ui-block-b" style="width:50%">
+				    			<input type="button" name="createAddress2" id="createAddress2" value="檢查地址是否有效">
+				    		</div>
+				    	</div>
+				    </li>
+				     
+				    <li class="seperator">
+				    	<div class="ui-grid-a">
+				    		<span>第三個送達地址(如果有的話)</span>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			送餐完整地址
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<!--input type="text" name="address3" id="address3" placeholder="記得填" value="新竹市東區光復路一段273號"-->
+				    			<input type="text" name="address3" id="address3" placeholder="記得填">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			聯絡備註
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<!--input type="text" name="addressNote3" id="addressNote3" placeholder="若有則填" value="凱基證券公司"-->
+				    			<input type="text" name="addressNote3" id="addressNote3" placeholder="若有則填">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			聯絡人
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<input type="text" name="contact3 id="contact3" placeholder="若有則填">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			聯絡電話
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<!--input type="text" name="contactPhone3" id="contactPhone3" placeholder="記得填" value="03-6686599"-->
+				    			<input type="text" name="contactPhone3" id="contactPhone3" placeholder="記得填">
+				    		</div>
+				    	</div>
+				    </li>
+				    <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:30%;padding:10 0 0 0">
+				    			收取現金
+				    		</div>
+				    		<div class="ui-block-b" style="width:70%">
+				    			<input type="text" name="cash3" id="cash3" placeholder="ex:500">
+				    		</div>
+				    	</div>
+				    </li>
+				     <li>
+				    	<div class="ui-grid-a">
+				    		<div class="ui-block-a font14" style="width:50%;padding:10 0 0 0">
+				    			<input type="hidden" name="addressId-3" id="addressId-3">
+				    			<input type="hidden" name="lat-3" id="lat-3" >
+				    			<input type="hidden" name="lng-3" id="lng-3" >
+				    			
+				    			<span id="findAddr3-OK" style="display:none"><img src="images/positive.png" width="50" height="50"></span>
+						        <span id="findAddr3-Failed" style="display:none"><img src="images/nagitive.jpeg" width="50" height="50"></span>
+				    		</div>
+				    		<div class="ui-block-b" style="width:50%">
+				    			<input type="button" name="createAddress3" id="createAddress3" value="檢查地址是否有效">
+				    		</div>
+				    	</div>
+				    </li>
+				    
+				    <li>
+						<fieldset data-role="fieldcontain">
+					        <a href="#" id="submitCreateForm" class="ui-shadow ui-btn ui-corner-all app-btn">送出外送單</a> 
+					    </fieldset>
+					</li>
+					
+				</ul>
+				
+			</div>
+		
+			<div data-role="popup" id="transactionResultPopup" data-overlay-theme="b" >
+	      		<div data-role="header">
+	        		<h1>表單送出結果</h1>
+	      		</div>
+	
+	      		<div data-role="main" class="ui-content">
+	        		<h3><span id="submitResult"></span></h3>
+	        		<div data-role="navbar">
+		      			<ul>
+		        			<li><a href="#" data-rel="back" class="app-btn" id="confirmResult">確定</a></li>
+		      			</ul>
+		    		</div>
+	     		</div>
+	     	</div>
+		
+	</div>	
+    	
+	
+</body>
+</html>

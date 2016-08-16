@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script src="scripts/parse-1.6.14.min.js"></script>
+    <script src="scripts/jquery-2.2.0.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/hbUtility.js"></script>
+    <script src="scripts/hbParseInit.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+    <script src="scripts/jquery.switchButton.js"></script>
+    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    <link href="css/jquery.switchButton.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/storeManagement.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <title></title>
+</head>
+<body id="main">
+    <div id="dialog">
+        請輸入預計開店時間之訊息
+        <input type="text" class="resumeInput"><br>
+
+    </div>
+    <ul class="nav nav-pills">
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                訂單查詢 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="index.html?mode=id">訂單編號</a></li>
+                <li><a href="index.html?mode=date">訂單日期</a></li>
+            </ul>
+        </li>
+
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                帳單查詢 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="storeBill.html">店家帳單</a></li>
+                <li><a href="beeShippingFee.html">小蜜蜂帳單</a></li>
+            </ul>
+        </li>
+
+
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                銀行匯款 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="bankTransfer_store.html">店家匯款</a></li>
+                <li><a href="bankTransfer_bee.html">小蜜蜂匯款</a></li>
+            </ul>
+        </li>
+
+        <li role="presentation" class="dropdown active"><a href="storeManagement.html">店鋪管理</a></li>
+        <li role="presentation" class="dropdown"><a href="beeManagement.html">小蜜蜂管理</a></li>
+        <li role="presentation" class="dropdown"><a href="activeUserManagement.html">活動紀錄查詢</a></li>
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                其他 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="coupon.html" target=_blank>折價卷產生器</a></li>
+                <li><a href="holdOrderTool.html" target=_blank>卡單小幫手</a></li>
+                <li><a href="" onclick="parseLogOut()">登出</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <div id="storeManagement">
+        <table class="table" id="storeTable">
+            <tr bgcolor="#FFDD55">
+                <td colspan="4" align="center">店鋪管理</td>
+            </tr>
+            <tr>
+                <td colspan="1">#</td>
+                <td colspan="1">店鋪</td>
+                <td colspan="1" width="80">營業(開/關)</td>
+                <td colspan="1">預計開店時間</td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="loadingIcon">
+        <i class="fa fa-refresh fa-spin" style="font-size:36px; color:orange;"></i>
+    </div>
+
+    <script>
+
+        $(function () {
+
+            var dialogInit = function () {
+                $("#dialog").dialog({
+                    autoOpen: false,
+                    modal: true,
+                    hide: { effect: "blind" },
+                    title: "開店時間",
+                });
+            }
+
+            //var parseInit = function () {
+            //    //Parse.initialize("UWZqpCsyFQWnyLTChFrK6t19NyLtmm7m0W2gP2ul", "GSmSLSAz7FfGyfXXB9wCvtwIJULXPHBFkM2PzwdZ");
+            //    Parse.initialize("9O3uQHctMnz86F6m3lifIlwKrMGONwlUjO2OL4uf", "nbkR1HRcOkFEa4J73rPsWvaZsqa6O6BHI0GSGClz");
+            //}
+
+            var init = function () {
+                dialogInit();
+                //parseInit();
+            }
+
+            var createStoreControlRow = function (store, num) {
+                $("#storeTable").append(
+                            $('<tr>').append(
+                                $('<td>').html(num), //#
+                                $('<td>').html(store.get('storeName')), //店鋪
+                                $('<td>').html(createCheckbox(store)), //營業(開/關)
+                                $('<td>').html(createNextOpenTime(store)) //預計開店時間
+                            )
+                         );
+            }
+
+            var createCheckbox = function (store) {
+                return $('<input>').attr("type", "checkbox").attr("id", store.id)
+                            .change(function () {
+                                if ($(this).is(':checked')) {
+                                    store.set("onhold", null);
+                                } else {
+                                    store.set("onhold", "breaking");
+                                }
+                                store.save();
+                            });
+            }
+
+            var createNextOpenTime = function (store) {
+                return $('<div>').attr("id", "resume_" + store.id).append(
+                            $('<font>').attr("class", "message").html(store.get('resume')),
+                            $('<i>').attr("class", "fa fa-edit").css({ "margin-left": "10px", "color": "orange" })
+                                    .on({
+                                        mouseenter: function () {
+                                            $(this).animate({ opacity: '0.3' });
+                                        },
+                                        mouseleave: function () {
+                                            $(this).animate({ opacity: '1' });
+                                        },
+                                        click: function () {
+                                            var editor = $(this);
+                                            editor.resumeId = "resume_" + store.id;
+                                            editor.store = store;
+                                            $("#dialog").dialog({
+                                                buttons: {
+                                                    取消: function () { $(this).dialog("close"); },
+                                                    修改: function () {
+                                                        $(this).dialog("close");
+                                                        var resumeMsg = $("#dialog .resumeInput").val();
+
+                                                        $("#" + editor.resumeId + " .message").text(resumeMsg);
+
+                                                        var data = editor.store;
+                                                        data.set('resume', resumeMsg);
+                                                        data.save();
+                                                    }
+                                                }
+                                            });
+
+                                            $("#dialog .resumeInput").val(editor.store.get('resume'));
+                                            $("#dialog").dialog("open");
+                                        }
+                                    })
+                       );
+            }
+
+            var checkboxInit = function (store) {
+                var checkbox = $("#" + store.id);
+                checkbox.switchButton({
+                    labels_placement: "right",
+                    checked: store.get("onhold") == null
+                });
+            }
+
+            init();
+
+            var HBFoodStore = Parse.Object.extend("HBFoodStore");
+            var query = new Parse.Query(HBFoodStore);
+            query.notEqualTo("objectId", "JmQzLQmzt8");
+            query.find({
+                success: function (results) {
+                    results.forEach(function (store, index, array) {
+                        createStoreControlRow(store, index + 1);
+                        checkboxInit(store);
+                    });
+
+                    $("#loadingIcon").hide();
+                    $("#storeManagement").slideDown("slow");;
+                }, error: function (error) {
+                    $("#loadingIcon").hide();
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

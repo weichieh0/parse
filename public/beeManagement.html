@@ -1,0 +1,475 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="scripts/parse-1.6.14.min.js"></script>
+    <script src="scripts/hbParseInit.js"></script>
+    <script src="scripts/hbUtility.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>-->
+
+    <!-- Latest compiled and minified CSS -->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">-->
+    <!-- Optional theme -->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">-->
+    <!-- Latest compiled and minified JavaScript -->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>-->
+
+    <script src="scripts/jquery-2.2.0.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <title>小蜜蜂小幫手</title>
+
+    <style>
+        .ui-widget-header, .ui-state-default, ui-button {
+            background: #faa732;
+            border: 1px solid #faa732;
+            color: #FFFFFF;
+            Font-family: Ms Gothic;
+            /*font-weight: bold;*/
+        }
+    </style>
+
+
+    <!--<script type="text/javascript" src="https://www.google.com/jsapi"></script>-->
+ 
+
+
+</head>
+<body id="main">
+    <ul class="nav nav-pills">
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                訂單查詢 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="index.html?mode=id">訂單編號</a></li>
+                <li><a href="index.html?mode=date">訂單日期</a></li>
+            </ul>
+        </li>
+
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                帳單查詢 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="storeBill.html">店家帳單</a></li>
+                <li><a href="beeShippingFee.html">小蜜蜂帳單</a></li>
+            </ul>
+        </li>
+
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                銀行匯款 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="bankTransfer_store.html">店家匯款</a></li>
+                <li><a href="bankTransfer_bee.html">小蜜蜂匯款</a></li>
+            </ul>
+        </li>
+
+        <li role="presentation"><a href="storeManagement.html">店鋪管理</a></li>
+
+        <li role="presentation" class="dropdown active"><a href="">小蜜蜂管理</a></li>
+        <li role="presentation" class="dropdown"><a href="activeUserManagement.html">活動紀錄</a></li>
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                其他 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="coupon.html" target=_blank>折價卷產生器</a></li>
+                <li><a href="holdOrderTool.html" target=_blank>卡單小幫手</a></li>
+                <li><a href="" onclick="parseLogOut()">登出</a></li>
+            </ul>
+        </li>
+
+    </ul>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">小蜜蜂管理</div>
+
+        <div class="panel-body">
+            <div class="navbar-form navbar-left">
+                <div class="form-group">
+                  
+                    <span class="label label-primary">1</span><br/>
+                    <label>電話:</label>
+                    <input type="text" class="form-control" placeholder="請輸入小蜜蜂電話" id="phoneInput">
+                    <button type="submit" class="btn btn-default" id="beeSearchBtn1">查詢</button>
+                </div>
+                
+                <p> or </p>
+
+                <div class="form-group">
+
+                    <span class="label label-primary">2</span><br />
+                    <label>名字:</label>
+                    <input type="text"  list="beeNameList"  class="form-control" placeholder="請輸入小蜜蜂名字" id="nameInput">
+                    <button type="submit" class="btn btn-default" id="beeSearchBtn2">查詢</button>
+                    <datalist id="beeNameList"></datalist>
+                </div>
+
+                <p> or </p>
+
+
+                <div class="form-group">
+
+                    <span class="label label-primary">3</span><br>
+                  
+                    <label for="dateFrom">時間: </label>
+                    <input id="dateFrom" type="date" class="form-control" min="2015-01-02">
+                    <label for="sel1">~</label>
+                    <input id="dateTo" type="date" class="form-control" min="2015-01-02"><br>
+                  
+                    <label for="sel1">分類:</label>
+                    <select class="form-control" id="sel1">
+                        <option value="all">全部</option>
+                        <option value="applying">未完成申請</option>
+                        <option value="applied_and_not_qualify">待審核</option>
+                        <option value="applied_and_qualify">合格</option>
+                        <option value="cancel">取消</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-default" id="beeSearchBtn3">查詢</button>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-striped ">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>時間</th>
+                    <th>名字</th>
+                    <th>狀態</th>
+                    <th>電話</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="beeTableBody">
+               
+            </tbody>
+        </table>
+
+        <!--<nav>
+            <ul class="pagination">
+                <li><a href="#"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
+            </ul>
+        </nav>-->
+
+    </div>
+
+    <script>
+        var phones = [];
+        var localBeeeNameList;
+        
+        $(function () {
+            //var parseInit = function () {
+            //    Parse.initialize("9O3uQHctMnz86F6m3lifIlwKrMGONwlUjO2OL4uf", "nbkR1HRcOkFEa4J73rPsWvaZsqa6O6BHI0GSGClz");
+            //}
+            if(localStorage.beeNames != null){
+                localBeeeNameList = JSON.parse(localStorage.beeNames);
+            }else{
+                localBeeeNameList = [];
+            }
+            // if(localBeeeNameList == null){
+            	// localBeeeNameList = [];
+            // }
+ 
+			localBeeeNameList.forEach(function(element){
+					console.log(element);
+					$("#beeNameList").append($("<option>").val(element));
+			});
+			
+			
+
+            var init = function () {
+                // //parseInit();  
+            };
+         
+            init();
+
+            // var filter = "";
+            // $.getJSON("https://spreadsheets.google.com/feeds/list/1oviULTtMf47kvgrSys2czX4qaI2JyF9_NTwBOFdlQRY/1/public/values?alt=json-in-script&callback=?" + filter, function (json) {
+                // if (json.feed.entry == null) {
+                    // //alert("json.feed.entry == null");
+// 
+                    // console.log("json.feed.entry == null");
+                // } else {
+                    // //alert("json.feed.entry.length = " + json.feed.entry.length);
+// 
+                    // console.log("json.feed.entry.length = " + json.feed.entry.length);
+                    // for (var i = 0; i < json.feed.entry.length; i++) {
+                        // phones[i] = json.feed.entry[i].gsx$phone.$t;
+                    // }
+                // }
+            // });
+
+        });
+
+        var getBeeStatus = function (bee) {
+            var beeStatus = "待審核";
+
+            if (bee.get('applyBee') === "applying") {
+
+                beeStatus = "未完成申請";
+
+            } else if (bee.get('applyBee') === "applied") {
+                if (!bee.get('qualify')) {
+
+                    var beeStatus = "待審核";
+
+                    var userPhone = bee.get('phone');
+
+                    for (var i = 0; i < phones.length; i++) {
+                        if (phones[i] == userPhone) {
+                            beeStatus = "已收到回傳表單";
+                            break;
+                        }
+                    }
+
+                } else {
+                    beeStatus = "合格";
+                }
+
+            } else if (bee.get('applyBee') === "cancel") {
+                beeStatus = "取消";
+            } 
+
+            return beeStatus;
+        };
+
+
+        $('#beeSearchBtn1').click(function () {
+
+            $("#beeTableBody tr").remove();
+            var username = "driver-" + $('#phoneInput').val();
+
+            var query = new Parse.Query(Parse.User);
+            query.equalTo("username", username);
+            query.find({
+                success: function (users) {
+
+                    if (users.length == 0) {
+                        alert("查無此小蜜蜂");
+                    } else if (users.length > 1) {
+                        alert("有相同的username");
+                    }
+
+                    users.forEach(function (user, index, array) {
+
+                        var beeStatus = getBeeStatus(user);
+
+                        $('#beeTableBody').append(
+                            $('<tr>').append(
+                                $('<td>').html(index + 1), //#
+                                $('<td>').html(format(user.get('createdAt'), 'yyyy-MM-dd hh:mm')),
+                                $('<td>').html($('<a href=beeInfo.html?objectId=' + user.id + ' target=_blank>').html(user.get('contact'))),
+                                $('<td>').html(beeStatus),
+                                $('<td>').html(user.get('phone')),
+                                $('<td>').html(user.get('email'))
+                            )
+                         );
+
+                    });
+
+                }, error: function (error) {
+                    //alert(ex);
+
+                    //console.log(ex);
+                }
+            });
+
+        });
+
+        $('#beeSearchBtn2').click(function () {
+            $("#beeTableBody tr").remove();
+            var contact = $('#nameInput').val();
+            
+            var query = new Parse.Query(Parse.User);
+            query.startsWith("contact", contact);
+            query.find({
+                success: function (users) {
+
+                    if (users.length == 0) {
+                        alert("查無此小蜜蜂");
+                        return;
+                    }
+
+                    users.forEach(function (user, index, array) {
+                    	var beeName = user.get('contact');
+                    	
+                    	if(localBeeeNameList.length != 0 ){
+                    	   var index = localBeeeNameList.indexOf(beeName);
+                    	}
+                    	
+                    	if(index !== -1 ){
+                    		localBeeeNameList.splice(index, 1);
+							console.log("splice" + beeName);
+                    	}
+                    		
+                    	localBeeeNameList.unshift(beeName);
+
+
+                        var beeStatus = getBeeStatus(user);
+                        $('#beeTableBody').append(
+                            $('<tr>').append(
+
+                                $('<td>').html(index + 1), //#
+                                $('<td>').html(format(user.get('createdAt'), 'yyyy-MM-dd hh:mm')),
+                                $('<td>').html($('<a href=beeInfo.html?objectId=' + user.id + ' target=_blank>').html(user.get('contact'))),
+                                $('<td>').html(beeStatus),
+                                $('<td>').html(user.get('phone')),
+                                $('<td>').html(user.get('email'))
+
+                            )
+                         );
+                    });
+                    
+                    var max = 50;
+                    
+                    if(localBeeeNameList.length > max){
+                    	localBeeeNameList.splice(max,localBeeeNameList.length - max);
+                    }
+                    
+                    localStorage.beeNames = JSON.stringify(localBeeeNameList);
+
+                }, error: function (error) {
+                    //alert(ex);
+
+                    //console.log(ex);
+                }
+            });
+
+
+
+        });
+
+        $('#beeSearchBtn3').click(function () {
+
+            $("#beeTableBody tr").remove();
+
+            var dateFrom = new Date($("#dateFrom").val());
+            var dateTo = new Date($("#dateTo").val());
+            dateTo.setDate(dateTo.getDate() + 1);
+
+            var query = new Parse.Query(Parse.User);
+            query.exists("contact");
+            query.greaterThan("createdAt", dateFrom);
+            query.lessThan("createdAt", dateTo);
+            query.descending("createdAt");
+            query.startsWith("username", "driver-");
+            query.limit(1000);
+
+            var selVal = $("#sel1").val();
+
+            if (selVal === "applying") {
+                query.equalTo("applyBee", "applying");
+            } else if (selVal === "applied_and_not_qualify") {
+                query.equalTo("applyBee", "applied");
+                query.equalTo("qualify", false);
+            } else if (selVal === "applied_and_qualify") {
+                query.equalTo("applyBee", "applied");
+                query.equalTo("qualify", true);
+            } else if (selVal === "cancel") {
+                query.equalTo("applyBee", "cancel");
+            }
+
+            //if (selVal == null || selVal == "notQualify") {
+            //    query.equalTo("qualify", false);
+            //} else {
+            //    query.equalTo("qualify", true);
+            //}
+
+            query.find({
+                success: function (users) {
+                    users.forEach(function (user, index, array) {
+                        var beeStatus = getBeeStatus(user);
+                        $('#beeTableBody').append(
+                            $('<tr>').append(
+                                $('<td>').html(index + 1), //#
+                                $('<td>').html(format(user.get('createdAt'), 'yyyy-MM-dd hh:mm')),
+                                $('<td>').html($('<a href=beeInfo.html?objectId=' + user.id + ' target=_blank>').html(user.get('contact'))),
+                                $('<td>').html(beeStatus),
+                                $('<td>').html(user.get('phone')),
+                                $('<td>').html(user.get('email'))
+                            )
+                         );
+
+                    });
+
+                }, error: function (e) {
+
+                }
+            });
+
+        });
+
+
+        //$('#beeSearchBtn1').on('click', function (e) {
+        //    var username = "driver-" + $('#phoneInput').val();
+        //    alert(username);
+
+        //    var query = new Parse.Query("User");
+        //    query.equalTo("username", username);
+        //    query.find({
+        //        success: function (users) {
+
+        //            if (users.length == 0) {
+        //                alert("查無此小蜜蜂");
+        //            } else if (users.length > 1) {
+        //                alert("有相同的username");
+        //            }
+
+        //            alert(users.id);
+        //            console.log(users.id);
+
+        //        },
+        //        error: function (ex) {
+        //            alert(ex);
+
+        //            console.log(ex);
+        //        }
+        //    });
+
+
+        //    console.log("beeSearchBtn1 onclick");
+        //    alert("beeSearchBtn1 onclick");
+        //});
+
+
+
+    </script>
+
+
+
+    <!--<script type="text/javascript" src="https://www.google.com/jsapi"></script>]-->
+    <!--<script>
+
+        $.getJSON("https://spreadsheets.google.com/feeds/list/1oviULTtMf47kvgrSys2czX4qaI2JyF9_NTwBOFdlQRY/1/public/values?alt=json-in-script&callback=?", function (json) {
+            var ProductName = [];
+            var Price = [];
+            for (var i = 0; i < json.feed.entry.length; i++) {
+                ProductName[i] = json.feed.entry[i].gsx$時間戳記.$t;
+                Price[i] = json.feed.entry[i].gsx$email.$t;
+
+                console.log(ProductName[i] + "," + Price[i]);
+            }
+
+        });
+    </script>-->
+
+
+</body>
+</html>

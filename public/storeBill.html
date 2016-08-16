@@ -1,0 +1,335 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>小蜜蜂小幫手</title>
+    <script src="scripts/parse-1.6.14.min.js"></script>
+    <script src="scripts/jquery-2.2.0.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/hbUtility.js"></script>
+    <script src="scripts/hbParseInit.js"></script>
+
+    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    <!--<script type="text/javascript">
+        Parse.initialize("9O3uQHctMnz86F6m3lifIlwKrMGONwlUjO2OL4uf", "nbkR1HRcOkFEa4J73rPsWvaZsqa6O6BHI0GSGClz");
+    </script>-->
+
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/storeBill.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+    <style>
+        .ui-widget-header, .ui-state-default, ui-button {
+            background: #faa732;
+            border: 1px solid #faa732;
+            color: #FFFFFF;
+            Font-family: Ms Gothic;
+            /*font-weight: bold;*/
+        }
+    </style>
+
+    <!-- Javascript -->
+    <script>
+        $(function () {
+            $("#dialog-1").dialog({
+                autoOpen: false,
+                modal: true,
+                hide: {
+                    effect: "blind"
+                },
+                height: 100,
+            });
+        });
+    </script>
+
+
+</head>
+<body id="main">
+    <div id="dialog-1"></div>
+    <ul class="nav nav-pills">
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                訂單查詢 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="index.html?mode=id" onclick="idMode()">訂單編號</a></li>
+                <li><a href="index.html?mode=date" onclick="dateMode()">訂單日期</a></li>
+            </ul>
+        </li>
+
+        <li role="presentation" class="dropdown active">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                帳單查詢 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="storeBill.html">店家帳單</a></li>
+                <li><a href="beeShippingFee.html">小蜜蜂帳單</a></li>
+            </ul>
+        </li>
+
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                銀行匯款 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="bankTransfer_store.html">店家匯款</a></li>
+                <li><a href="bankTransfer_bee.html">小蜜蜂匯款</a></li>
+            </ul>
+        </li>
+
+        <li role="presentation"><a href="storeManagement.html">店鋪管理</a></li>
+        <li role="presentation" class="dropdown"><a href="beeManagement.html">小蜜蜂管理</a></li>
+        <li role="presentation" class="dropdown"><a href="activeUserManagement.html">活動紀錄查詢</a></li>
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                其他 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="coupon.html" target=_blank>折價卷產生器</a></li>
+                <li><a href="holdOrderTool.html" target=_blank>卡單小幫手</a></li>
+                <li><a href="" onclick="parseLogOut()">登出</a></li>
+            </ul>
+        </li>
+
+    </ul>
+
+    <table>
+        <tr>
+            <td>
+                <select id="storeSelect" />
+            </td>
+        <tr>
+            <td>
+                <input id="dateFrom" type="date" min="2015-01-02">
+            </td>
+            <td valign="middle">
+                <div> ~ </div>
+            </td>
+            <td>
+                <input id="dateTo" type="date" min="2015-01-02">
+            </td>
+
+            <td valign="top">
+                <button class="btn btn btn-warning" id="searchBtn">嗡嗡嗡...</button>
+            </td>
+        </tr>
+    </table>
+    <div id="storeBillTableView">
+        <table class="table" id="billTable">
+            <tr bgcolor="#FFDD55">
+                <th colspan="4" style="text-align:center">店家資料</th>
+            </tr>
+
+            <tr>
+                <td colspan="1">店家</td>
+                <td colspan="1" id="storeName"></td>
+                <td colspan="1">電話</td>
+                <td colspan="1" id="storePhone"></td>
+            </tr>
+
+            <tr>
+                <td colspan="1">銀行代碼</td>
+                <td colspan="1" id="bankCode"></td>
+                <td colspan="1">帳戶號碼</td>
+                <td colspan="1" id="bankAccount"></td>
+            </tr>
+
+            <tr bgcolor="#dddddd">
+                <th colspan="4" style="text-align:center">結帳資料<font id="dateFromTo" /></th>
+            </tr>
+
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="1">營業額</td>
+                <td colspan="1" id="Revenue"></td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="1">HungryBee服務費(<font id="serviceFeePercent"></font>%)</td>
+                <td colspan="1" id="serviceFee"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="1">轉帳手續費</td>
+                <td colspan="1" id="transferFee"></td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="1">實際匯款</td>
+                <td colspan="1" id="currentFee"></td>
+            </tr>
+
+
+            <tr bgcolor="#dddddd">
+                <th>#</th>
+                <th>日期</th>
+                <th>編號</th>
+                <th>金額</th>
+            </tr>
+
+            <tr>
+                <th></th>
+                <th></th>
+                <th>總金額</th>
+                <th id="totalPrice"></th>
+            </tr>
+        </table>
+    </div>
+
+    <div id="loadingIcon">
+        <i class="fa fa-refresh fa-spin" style="font-size:36px; color:orange;"></i>
+    </div>
+
+    <script>
+        var storeArray = new Array();
+
+        $(function () {
+            $(document).ready(function () {
+                var HBFoodStore = Parse.Object.extend("HBFoodStore");
+                var query = new Parse.Query(HBFoodStore);
+                //query.equaTo
+                query.find({
+                    success: function (results) {
+                        var storeSelect = $('#storeSelect');
+                        results.forEach(function (store, index, array) {
+                            if (store.id == "JmQzLQmzt8") {
+                                //skip
+                                return;
+                            }
+                            storeArray[store.id] = store;
+                            storeSelect.append($("<option></option>").attr("value", store.id).text(store.get("storeName")));
+                            $("#loadingIcon").hide();
+                        });
+                    }, error: function (error) {
+                        $("#loadingIcon").hide();
+                    }
+                });
+            });
+
+            var billTable = document.getElementById("billTable");
+            var orginalRowCount = billTable.rows.length;
+
+            $('#searchBtn').on('click', function () {
+                $('#storeBillTableView').hide();
+                $("#loadingIcon").show();
+                for (var r = billTable.rows.length - 1; r > orginalRowCount-1; r--) {
+                    billTable.deleteRow(r - 1);
+                }
+
+                var dateFromText = $("#dateFrom").val();
+                var dateToText = $("#dateTo").val();
+
+                if (dateFromText == "" || dateToText == "") {
+                    $("#loadingIcon").hide();
+                    $("#dialog-1").dialog({ title: "注意" });
+                    $("#dialog-1").html("請選擇查詢日期");
+                    $("#dialog-1").dialog("open");
+
+                    $('#loadingIcon').hide();
+                    return;
+                }
+
+                $('#dateFromTo').html("(" + dateFromText + "~" + dateToText + ")");
+
+                var dateFrom = new Date(dateFromText);
+                var dateTo = new Date(dateToText);
+
+                dateTo.setDate(dateTo.getDate() + 1);
+
+                var selectedOption = $('#storeSelect :selected');
+                var store = storeArray[selectedOption.val()];
+
+
+                $('#storeName').html(store.get('storeName'));
+                $('#storePhone').html(store.get('phone'));
+                $('#bankCode').html(store.get('bankCode'));
+                $('#bankAccount').html(store.get('bankAccount'));
+
+                var HBShoppingCart = Parse.Object.extend("HBShoppingCart");
+                var cartQuery = new Parse.Query(HBShoppingCart);
+                cartQuery.equalTo("status", "complete");
+                cartQuery.greaterThan("submittedDate", dateFrom);
+                cartQuery.lessThan("submittedDate", dateTo);
+                cartQuery.descending("submittedDate");
+                cartQuery.limit(1000);
+                cartQuery.find({
+                    success: function (carts) {
+
+                        var HBShoppingItem = Parse.Object.extend("HBShoppingItem");
+                        var itemQuery = new Parse.Query(HBShoppingItem);
+
+                        itemQuery.equalTo("store", store);
+                        itemQuery.containedIn("shoppingCart", carts);
+                        itemQuery.include('meal');
+                        itemQuery.include('shoppingCart');
+                        itemQuery.descending("createdAt");
+                        itemQuery.find({
+                            success: function (shoppingItems) {
+                                var itemGroup = new GroupByKey(shoppingItems, "shoppingCart");
+                                var cartArray = itemGroup.getKeys();
+
+                                var count = 0;
+                                var totalSum = 0;
+                                cartArray.forEach(function (cart, index, array) {
+
+                                    var itemsByCart = itemGroup.getArrayByKey(cart);
+
+                                    var sum = 0;
+                                    itemsByCart.forEach(function (item) {
+                                        sum += item.get('subTotal');
+                                    })
+
+                                    var row = billTable.insertRow(billTable.rows.length - 1)
+
+                                    row.insertCell(0).innerHTML = ++count;
+                                    row.insertCell(1).innerHTML = format(cart.get("submittedDate"), 'yyyy-MM-dd');
+                                    var cell = row.insertCell(2);
+                                    cell.id = cart.id;
+                                    cell.innerHTML = "<a>" + cart.id + "</a>";
+                                    row.insertCell(3).innerHTML = sum;
+                                    totalSum += sum;
+                                });
+
+                                document.getElementById("totalPrice").innerHTML = totalSum;
+
+                                //富邦 bankCode = 012;
+                                var transferFee = (store.get('bankCode') == "012" || store.get('bankCode') == "013") ? 0 : 15;
+                     
+                                var serviceFeePercent = store.get('serviceFee');
+                                var serviceFee = Math.ceil(totalSum * serviceFeePercent);
+                                var currentFee = totalSum - serviceFee - transferFee;
+                                if (currentFee < 0) {
+                                    transferFee = 0;
+                                    currentFee = 0;
+                                }
+
+                                $('#Revenue').html(totalSum);
+                                $('#serviceFeePercent').html(100 * serviceFeePercent);
+                                $('#serviceFee').html(serviceFee);
+                                $('#transferFee').html(transferFee);
+                                $('#currentFee').html(currentFee);
+                                $("#loadingIcon").hide();
+                                $('#storeBillTableView').slideDown("slow");
+
+
+                            }, error: function (error) {
+                                $("#loadingIcon").hide();
+                            }
+                        });
+
+                    }, error: function (results) {
+                        $("#loadingIcon").hide();
+                    }
+                });
+
+            });
+        });
+
+
+    </script>
+
+</body>
+</html>

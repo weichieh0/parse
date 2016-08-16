@@ -1,0 +1,36 @@
+﻿body {
+    /*Font-family:Ms Gothic;*/
+}
+
+#main {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 16px;
+    margin-right: 16px;
+    width: 600px;
+}
+
+#shippingFeeTable {
+    width: 532px;
+    /*display: none;*/
+    text-align: center;
+}
+
+#shippingFeeTableView {
+    margin-top: 20px;
+    display: none;
+}
+
+#loadingIcon {
+    width: 532px;
+    /*visibility: hidden;*/
+    text-align: center;
+}
+
+#shippingFeeTable td {
+    text-align: center;
+}
+
+#shippingFeeTable th {
+    text-align: center;
+}

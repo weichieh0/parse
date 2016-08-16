@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Waypoints in directions</title>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        #load-msg{
+            margin: 10px;
+        }
+
+        #map {
+            margin: 10px;
+            height: 85%;
+            /*float: left;*/
+            /*width: 90%;*/
+            /*height: 80%;*/
+        }
+
+        #right-panel {
+            font-family: 'Roboto','sans-serif';
+            line-height: 30px;
+            padding-left: 10px;
+        }
+
+            #right-panel select, #right-panel input {
+                font-size: 15px;
+            }
+
+            #right-panel select {
+                width: 100%;
+            }
+
+            #right-panel i {
+                font-size: 12px;
+            }
+
+        #right-panel {
+            margin: 10px;
+            border-width: 2px;
+            width: 90%;
+            /*float: left;*/
+            text-align: left;
+            /*padding-top: 20px;*/
+        }
+
+        #directions-panel {
+            margin-top: 20px;
+            background-color: #FFEE77;
+            padding: 10px;
+        }
+
+        #button-group {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div id="button-group">
+        <button type="submit" class="btn btn-default" id="mapBtn">地圖</button>
+        <button type="submit" class="btn btn-default" id="routeBtn">路線</button>
+
+    </div>
+
+    <div id="load-msg">
+        必須使用定位功能，請開啟開位置定位
+    </div>
+
+    <div id="map"></div>
+
+
+    <div id="right-panel">
+        <!--<div id="selector">
+            <b>Start:</b>
+            <select id="start">
+                <option value="新竹市城隍廟">城隍廟</option>
+                <option value="新竹市東區新安路五號">微蜂</option>
+                <option value="交通大學 台灣">交通大學</option>
+
+            </select>
+            <br>
+            <b>Waypoints:</b> <br>
+            <i>(Ctrl-Click for multiple selection)</i> <br>
+            <select multiple id="waypoints">
+                <option value="新竹市東南街104號">惡魔島酥炸雞排</option>
+                <option value="新竹市復興路19號">Tiny熱壓三明治</option>
+                <option value="新竹市明湖路175巷13號">風城披薩</option>
+                <option value="新竹市東區光復路一段220號">愛知味海苔飯捲</option>
+                <option value="新竹市經國路三段92巷16弄41號">小善豆府</option>
+                <option value="新竹市建功一路10-2號">金芝園</option>
+                <option value="新竹市東區南大路392號">21金鍋(南大店)</option>
+
+            </select>
+            <br>
+            <b>End:</b>
+            <select id="end">
+                <option value="新竹市東區新安路五號">微蜂</option>
+            </select>
+            <br>
+            <input type="submit" id="submit">
+        </div>-->
+
+        <div id="directions-info">
+            <label>預估運送時間: </label> <font id="total-deliver-time"></font><br>
+            <label>預估運送距離: </label> <font id="total-deliver-distance"></font>
+        </div>
+        <div id="directions-panel"></div>
+    </div>
+
+
+
+
+    <script>
+
+        $('#map').show();
+        $('#right-panel').hide();
+        $('#load-msg').show();
+        $(function () {
+
+            $('#mapBtn').click(function () {
+                $('#map').show();
+                $('#right-panel').hide();
+
+            });
+
+            $('#routeBtn').click(function () {
+                $('#map').hide();
+                $('#right-panel').show();
+
+            });
+
+
+        })
+
+
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };
+
+
+        var map;
+        function initMap() {
+            var directionsService = new google.maps.DirectionsService;
+            var directionsDisplay = new google.maps.DirectionsRenderer({
+                //suppressMarkers: true
+            });
+            
+  
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    calculateAndDisplayRoute(directionsService, directionsDisplay, position);
+                });
+            } else {
+                alert("無法取得您目前的位置!")
+            }
+        }
+
+        function calculateAndDisplayRoute(directionsService, directionsDisplay, position) {
+            var origin = position.coords.latitude + "," + position.coords.longitude;
+            //var origin = getUrlParameter('origin_address');
+            var destination = getUrlParameter('destination_address');
+
+            var waypts = [];
+            var wayptsName = []
+            var wayptsSize = parseInt(getUrlParameter('wayptsSize'));
+
+            for (var i = 0; i < wayptsSize; i++) {
+                var waypt_address = getUrlParameter('waypt' + i + '_address');
+                var waypt_name = getUrlParameter('waypt' + i + '_name');
+                
+                waypts[i] = {
+                    location: waypt_address,
+                    stopover: true
+                };
+
+                wayptsName[i] = waypt_name;
+            }
+
+
+            directionsService.route({
+                origin: origin,
+                destination: destination,
+                waypoints: waypts,
+                optimizeWaypoints: true,
+                avoidHighways: true,
+                travelMode: google.maps.TravelMode.DRIVING
+            }, function (response, status) {
+
+                if (status === google.maps.DirectionsStatus.OK) {
+                    var route = response.routes[0];
+                    route.legs[0].start_address = "您的位置";
+
+                    var legs = response.routes[0].legs;
+                    var waypoint_orders = route.waypoint_order;
+
+                    for (var i = 1; i < legs.length; i++) {
+                        legs[i].start_address = "<b>" + wayptsName[waypoint_orders[i - 1]] + "</b><br>" + legs[i].start_address;
+                        //legs[i].start_address = wayptsName[waypoint_orders[i-1]] + "(" + legs[i].start_address + ")";
+                    }
+
+                    legs[legs.length - 1].end_address = "送餐地址 (" + legs[legs.length - 1].end_address + ")";
+
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        //zoom: 10,
+                        //center: { lat: 24.797604, lng: 120.996027 }
+                    });
+                    directionsDisplay.setMap(map);
+                    directionsDisplay.setPanel(document.getElementById('right-panel'));
+                    directionsDisplay.setDirections(response);
+
+                    var durationSum = 0;
+                    var distanceSum = 0;
+                    for (var i = 0, len = legs.length; i < len; i++) {
+                        durationSum += legs[i].duration.value;
+                        distanceSum += legs[i].distance.value;
+                    }
+
+                    durationSum += 60 * 3 * (legs.length - 1);
+
+                    var totalMinute = durationSum / 60;
+                    var distanceNum = new Number(distanceSum / 1000);
+
+                    $('#total-deliver-time').html("約 " + parseInt(totalMinute, 10) + " 分鐘");
+                    $('#total-deliver-distance').html("約 " + distanceNum.toFixed(1) + " 公里");
+                  
+                    $('#directions-panel').hide();
+                    $('#load-msg').hide();
+
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            });
+        }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDG1oDvvPNi3vfwFcONINhSiyQZWFgm9Q4&signed_in=true&callback=initMap"
+            async defer></script>
+</body>
+</html>

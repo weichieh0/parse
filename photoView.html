@@ -1,0 +1,77 @@
+<html>
+
+<head></head>
+
+<body>
+
+
+
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="scripts/parse-1.6.14.min.js"></script>
+  <script src="scripts/hbParseInit.js"></script>
+  <script src="scripts/hbUtility.js"></script>
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"
+        rel="stylesheet" type="text/css"> -->
+  <script src="scripts/jquery-2.2.0.min.js"></script>
+  <script src="scripts/bootstrap.min.js"></script>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="http://v4.pingendo.com/assets/bootstrap/themes/default.css" rel="stylesheet" type="text/css">
+  <!-- <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
+  <!-- <script type="text/javascript" src="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js"></script> -->
+  <title>小蜜蜂小幫手</title>
+
+
+
+  <!-- <img alt="User Pic" id="photo"> -->
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-block">
+              <h4 class="card-title">小蜜蜂駕照</h4>
+              <h6 class="card-subtitle text-muted">driver licence of motorbike</h6>
+            </div>
+            <img class="card-img-top img-fluid" alt="Card image" id="photo">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    
+                //var parseInit = function () {
+                //    Parse.initialize("9O3uQHctMnz86F6m3lifIlwKrMGONwlUjO2OL4uf", "nbkR1HRcOkFEa4J73rPsWvaZsqa6O6BHI0GSGClz");
+                //}
+    
+                var init = function () {
+                    //parseInit();
+                };
+    
+                init();
+    
+                var objectId = getUrlParameter('objectId');
+                var HBLob = Parse.Object.extend("HBLob");
+                var lobQuery = new Parse.Query(HBLob);
+                lobQuery.get(objectId, {
+    
+                    success: function (lob) {
+                        if (lob != null) {
+                            var photo = lob.get("data");
+                            $("#photo")[0].src = photo.url();
+                        }
+                    }, error: function (e) {
+                    }
+                });
+            });
+  </script>
+
+
+</body>
+
+</html>

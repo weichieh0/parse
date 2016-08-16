@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="scripts/parse-1.6.14.min.js"></script>
+    <script src="scripts/hbParseInit.js"></script>
+    <script src="scripts/hbUtility.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <script src="scripts/jquery-2.2.0.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <title>小蜜蜂小幫手</title>
+</head>
+<body>
+
+    <br>
+    <div class="col-xl-12 col-xs-12 col-sm-12 col-md-6 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-2 toppad">
+        <div class="panel panel-warning ">
+            <div class="panel-heading">
+                <h3 class="panel-title">卡單小工具</h3>
+            </div>
+            <div class="panel-body" style='margin-left:20px;margin-right:20px;' id="inputView">
+                <div class="row">
+
+                    <span class="label label-warning ">1</span><br />
+                    <label for="sel1">使用者電話:</label>
+
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="請輸入使用者電話" id="ownerPhoneInput">
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning " type="button" id="checkOwnerExistBtn">輸入</button>
+                        </span>
+                    </div>
+
+                    <br>
+                    <span class="label label-warning ">2</span><br />
+                    <label for="sel1">訂單資訊:</label>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td colspan="1" id="">訂餐編號</td>
+                                <td colspan="1" id="">訂餐人姓名</td>
+                                <td colspan="1">訂餐人電話</td>
+                            </tr>
+                        </thead>
+                        <tbody id="resultCartRow"></tbody>
+                    </table>
+
+                    <span class="label label-warning ">3</span><br />
+                    <label for="sel1">卡單:</label>
+                    <br>
+                    <button type="submit" class="btn btn-warning " id="executeBtn">執行</button><br />
+
+                    <br>
+                    <span class="label label-warning ">4</span><br />
+                    <label for="sel1">結果:</label>
+                    <br>
+
+                    <p  id="resultText"></p>
+                    <!--<button type="submit" class="btn btn-success" id="executeBtn">執行</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="executeModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">注意</h4>
+                </div>
+                <div class="modal-body">
+                    <p>是否將此訂單 "卡單" 不讓其他小蜜蜂搶單?</p>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="executeModalBtn">確定</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+
+            var shoppingCart;
+            $('#checkOwnerExistBtn').click(function (e) {
+
+                var ownerPhoneInput = $("#ownerPhoneInput").val();
+                var query = new Parse.Query(Parse.User);
+                query.equalTo("username", ownerPhoneInput);
+
+                var HBShoppingCart = Parse.Object.extend("HBShoppingCart");
+                var cartQuery = new Parse.Query(HBShoppingCart);
+                cartQuery.matchesQuery("owner", query);
+                cartQuery.include("owner");
+                cartQuery.equalTo("status", "in shopping");
+                cartQuery.first({
+                    success: function (cart) {
+
+                        shoppingCart = null;
+
+                        if (cart != null) {
+                            shoppingCart = cart;
+
+                            console.log("cart.id =  " + cart.id);
+                            $("#resultCartRow").html("");
+                            $("#resultCartRow").append(
+                               $('<tr>').append(
+                                   $('<td>').html(cart.id),
+                                   $('<td>').html(cart.get("owner").get("contact")),
+                                   $('<td>').html(cart.get("owner").get("phone"))));
+
+                        } else {
+                            console.log("cart == null");
+                            alert("找不到訂單");
+                        }
+
+                    }, error: function (e) {
+                        console.log("error: " + e);
+                    }
+
+                });
+            });
+
+            $('#executeBtn').click(function (e) {
+                $('#executeModal').modal('show');
+                $('#executeModalBtn').prop('onclick', null).off('click');
+                $('#executeModalBtn').click(function () {
+                    if (shoppingCart != null) {
+                        shoppingCart.set("bidCount",99);
+                        shoppingCart.save(null, {
+                            success: function (cart) {
+
+                                alert("已完成卡單");
+
+                                $('#resultText').text("已完成卡單");
+          
+                            },
+                            error: function (error) {
+
+                                alert("執行卡單時發生錯誤，請聯絡偉大工程師處理!");
+                            }
+                        });
+                    } else {
+                        alert("找不到訂單");
+                    }
+
+                    
+                });
+            });
+
+        });
+
+    </script>
+
+
+</body>
+</html>
