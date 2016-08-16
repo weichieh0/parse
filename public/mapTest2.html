@@ -3,6 +3,8 @@
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*"/>
+
     <title>Waypoints in directions</title>
 
 
@@ -13,7 +15,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-
+    <script src="scripts/parse-1.6.14.min.js"></script>
 
     <style>
         html, body {
@@ -129,28 +131,40 @@
 
 
 
-
     <script>
-
-        $('#map').show();
-        $('#right-panel').hide();
-        $('#load-msg').show();
-        $(function () {
-
-            $('#mapBtn').click(function () {
-                $('#map').show();
-                $('#right-panel').hide();
-
-            });
-
-            $('#routeBtn').click(function () {
-                $('#map').hide();
-                $('#right-panel').show();
-
-            });
-
-
-        })
+    
+        // Parse.initialize('myAppId','unused');
+        // Parse.serverURL = 'https://whatever.herokuapp.com';
+        Parse.initialize("myAppId");
+        Parse.serverURL = 'http://arcane-sea-22073.herokuapp.com';
+    
+        Parse.Cloud.run("hello",null, {
+              success: function (result) {
+                alert("result = " + result);
+              }, error: function (error) {
+                alert("error" + error);
+              }                                
+        });
+ 
+        // $('#map').show();
+        // $('#right-panel').hide();
+        // $('#load-msg').show();
+        // $(function () {
+// 
+            // $('#mapBtn').click(function () {
+                // $('#map').show();
+                // $('#right-panel').hide();
+// 
+            // });
+// 
+            // $('#routeBtn').click(function () {
+                // $('#map').hide();
+                // $('#right-panel').show();
+// 
+            // });
+// 
+// 
+        // })
 
 
         var getUrlParameter = function getUrlParameter(sParam) {
