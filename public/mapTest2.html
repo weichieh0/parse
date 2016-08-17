@@ -150,7 +150,7 @@
         }, function(err) { console.log(err); });
     
     
-        Parse.Cloud.run("hello",null, {
+        Parse.Cloud.run("hello",{}, {
               success: function (result) {
                 alert("result = " + result);
               }, error: function (error) {
